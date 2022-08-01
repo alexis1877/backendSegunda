@@ -68,7 +68,7 @@ rutas.put("/productos/actualizar/:id", (req, res) => {
     cantidad,
     desc,
     id_sub_categoria,
-    url,
+    url
   } = req.body;
   const { id } = req.params;
   const query = `
