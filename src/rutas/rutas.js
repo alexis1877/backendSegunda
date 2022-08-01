@@ -194,6 +194,34 @@ ruta.delete('/productos/eliminar/:id', (req, res) => {
 });
 
 
+//Categorias
+ruta.get("/categorias", (req, res) => {
+  let query = "SELECT id_categoria, nombre FROM categoria";
+
+  consulta.query(query, (err, rows) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+//Sub-categorias
+ruta.get("/subcategorias", (req, res) => {
+  let query =
+    "SELECT SC.id_categoria, SC.nombre FROM sub_categoria SC INNER JOIN categoria C ON SC.id_categoria = C.id_categoria";
+
+  consulta.query(query, (err, rows) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+
 // Termina productos
 
 //  CONSULTAR TICKET
@@ -201,7 +229,7 @@ ruta.delete('/productos/eliminar/:id', (req, res) => {
 ruta.get('/ticket/consulta/:id', (req, res) => {
   const { id } = req.params;
   //let sql = "SELECT venta.id_venta, venta.id_ticket, venta.cantidad, nombre_producto, categoria_producto, precio_producto, descripbr_producto, imagen FROM venta INNER JOIN productos ON venta.id_producto = productos.id -- tabla.FK = tabla.PK INNER JOIN ticket ON venta.id_ticket = ticket.id_ticket;";
-  let sql = "SELECT venta.id_venta, usuario.nombre, venta.id_ticket, venta.cantidad, nombre_producto, precio_producto, productos.desc, imagen FROM venta INNER JOIN productos ON venta.id_producto = productos.id INNER JOIN ticket ON venta.id_ticket = ticket.id_ticket INNER JOIN usuario ON ticket.id_usuario =usuario.id_usuario WHERE ticket.id_ticket = ?";
+  let sql = "SELECT venta.id_venta, usuario.nombre, venta.id_ticket, venta.cantidad, nombre_producto, precio_producto, productos.desc FROM venta INNER JOIN productos ON venta.id_producto = productos.id INNER JOIN ticket ON venta.id_ticket = ticket.id_ticket INNER JOIN usuario ON ticket.id_usuario =usuario.id_usuario WHERE ticket.id_ticket = ?";
   consulta.query(sql, [id], (err, rows) => {
       if (!err) {
           res.json(rows);
@@ -234,6 +262,7 @@ ruta.delete('/ticket/eliminar/:id', (req, res) => {
 //http://localhost:4200/ticket/insertar
 ruta.post('/ticket/insertar', (req, res) => {
   const { id_ticket, id_producto, cantidad } = req.body;
+  console.log(req.body);
   let sql = "call insertar_en_ticket('" + id_ticket + "', '" + id_producto + "', '" + cantidad + "')";
   consulta.query(sql, (err, rows) => {
       if (!err) {
