@@ -1,21 +1,32 @@
-const express = require("express");
+//  requiero del modulo express y lo guardo en una constante
+const express = require('express');
+const cors = require('cors');
+
+//  funcion que retorna objeto almacenado en la constante app
 const app = express();
-const morgan = require('morgan');
-const cors = require("cors");
 
-app.set("port", process.env.PORT || 4000);
-console.log("holamundo");
-app.listen(app.get("port"));
-
+//SETTING --seccion para configuracion
+//  Confiuracion parte de la constante app
+//              si un sistema operativo nos da un puerto y lo toma si no es el 4200
+app.set('port', process.env.PORT || 4000);
 app.use(cors());
-app.use(morgan('dev'));
+
+//MIDDLEWARES
+//  permite recibir formato json y entenderlo
 app.use(express.json());
-app.use(express.urlencoded({extended:false}));
-app.use(require("../src/rutas/rutas"));
+//  enviar datos de un formulario ocupamos esta
+app.use(express.urlencoded({ extended: false }));
 
 
-module.exports =app;
+//ROUTES  --creamos las rutas urls
+app.use(require('./routes/routes'));
+
+//Agregar esta
+//ap.use();
 
 
 
-//const port = ('process.env.port'||4000);
+//  inicicilaizarlo y colocar el puerto pa' que este escuchando
+app.listen(app.get('port'), () => {
+    console.log('Server en el puerto', app.get('port'));
+});
